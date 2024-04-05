@@ -11,7 +11,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -27,8 +31,58 @@ public class RobotTest {
     @Nested
     @Order(1)
     class VerifyClassDefinition {
+
         @Test
         @Order(0)
+        void testRobotHasCodeMaxWeightAndComponentsAttributes() {
+            try {
+                Field[] fields = Robot.class.getDeclaredFields();
+                Map<String, Integer> fieldModifiersByName = Arrays.stream(fields)
+                    .collect(
+                        Collectors.toMap(
+                            field -> field.getName(),
+                            field -> field.getModifiers()
+                        )
+                    );
+
+                Map<String, String> fieldTypesByName = Arrays.stream(fields)
+                    .collect(
+                        Collectors.toMap(
+                            field -> field.getName(),
+                            field -> field.getType().getSimpleName()
+                        )
+                    );
+
+                assertAll(
+                    () -> assertTrue(fieldModifiersByName.containsKey("code"),
+                        "String attribute 'code' does not exist in Robot class."),
+                    () -> assertTrue(fieldModifiersByName.containsKey("maxWeight"),
+                        "double attribute 'maxWeight' does not exist in Robot class."),
+                    () -> assertTrue(fieldModifiersByName.containsKey("components"),
+                        "List<Component> attribute 'components' does not exist in Robot class."),
+                    () -> assertEquals(Modifier.toString(Modifier.PRIVATE),
+                        Modifier.toString(fieldModifiersByName.getOrDefault("code", 0)),
+                        "String attribute 'code' is not private in Robot class."),
+                    () -> assertEquals(Modifier.toString(Modifier.PRIVATE),
+                        Modifier.toString(fieldModifiersByName.getOrDefault("maxWeight", 0)),
+                        "double attribute 'maxWeight' is not private in Robot class."),
+                    () -> assertEquals(Modifier.toString(Modifier.PRIVATE),
+                        Modifier.toString(fieldModifiersByName.getOrDefault("components", 0)),
+                        "List<Component> attribute 'components' is not private in Robot class."),
+                    () -> assertEquals("String", fieldTypesByName.getOrDefault("code", ""),
+                        "Attribute 'code' in Robot class is not of type String."),
+                    () -> assertEquals("double", fieldTypesByName.getOrDefault("maxWeight", ""),
+                        "Attribute 'maxWeight' in Robot class is not of type double."),
+                    () -> assertEquals("List", fieldTypesByName.getOrDefault("components", ""),
+                        "Attribute 'components' in Robot class is not of type List<Component>.")
+                );
+            } catch (Exception e) {
+                fail("An attribute does not exist in Robot class.");
+            }
+        }
+
+        @Test
+        @Order(1)
         public void testRobotHasConstructorWithCodeAndMaxWeight() {
 
             try {
@@ -41,7 +95,7 @@ public class RobotTest {
         }
 
         @Test
-        @Order(1)
+        @Order(2)
         public void testRobotHasGettersAndSetters() {
             try {
                 Method getCodeMethod = Robot.class.getMethod("getCode");
@@ -61,7 +115,7 @@ public class RobotTest {
         }
 
         @Test
-        @Order(2)
+        @Order(3)
         public void testRobotHasMethodGetComponentsWeight() {
             try {
                 Method getComponentsWeightMethod = Robot.class.getMethod("getComponentsWeight");
@@ -72,7 +126,7 @@ public class RobotTest {
         }
 
         @Test
-        @Order(3)
+        @Order(4)
         public void testRobotHasMethodAddComponent() {
             try {
                 Method addComponentMethod = Robot.class.getMethod("addComponent", int.class, String.class, double.class);
@@ -83,7 +137,7 @@ public class RobotTest {
         }
 
         @Test
-        @Order(4)
+        @Order(5)
         public void testRobotHasMethodGetComponentsNames() {
             try {
                 Method getComponentsNamesMethod = Robot.class.getMethod("getComponentsNames");
@@ -94,7 +148,7 @@ public class RobotTest {
         }
 
         @Test
-        @Order(5)
+        @Order(6)
         public void testRobotHasAttributes() {
             try {
                 Field codeField = Robot.class.getDeclaredField("code");
@@ -113,7 +167,7 @@ public class RobotTest {
     }
 
     @Nested
-    @Order(2)
+    @Order(7)
     class VerifyClassBehavior {
         Robot robot;
 
@@ -141,7 +195,7 @@ public class RobotTest {
         }
 
         @Test
-        @Order(0)
+        @Order(8)
         public void testRobotIsAddingComponent() {
             try {
                 // Obtain and invoke addComponent method
@@ -161,7 +215,7 @@ public class RobotTest {
         }
 
         @Test
-        @Order(1)
+        @Order(9)
         public void testRobotIsNotAddingComponentWhenItExceedsMaximumWeight() {
             try {
                 // Obtain and invoke addComponent method
@@ -181,7 +235,7 @@ public class RobotTest {
         }
 
         @Test
-        @Order(2)
+        @Order(10)
         public void testRobotIsGettingComponentsWeight() {
             try {
                 // Obtain and invoke addComponent and getComponentsWeight methods
@@ -207,7 +261,7 @@ public class RobotTest {
         }
 
         @Test
-        @Order(3)
+        @Order(11)
         public void testRobotIsGettingComponentsNames() {
             try {
                 // Obtain and invoke addComponent and getComponentsNames methods

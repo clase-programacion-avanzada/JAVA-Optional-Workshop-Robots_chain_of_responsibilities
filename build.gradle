@@ -28,7 +28,7 @@ task componentTest(type: Test) {
         exceptionFormat "full"
         showExceptions true
         showCauses true
-        showStackTraces true
+        showStackTraces false
     }
 }
 
@@ -57,8 +57,8 @@ task catalogTest(type: Test) {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
         showExceptions true
-        showCauses true
-        showStackTraces true
+        showCauses false
+        showStackTraces false
     }
 }
 

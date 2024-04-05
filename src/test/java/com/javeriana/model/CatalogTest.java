@@ -12,7 +12,11 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -34,9 +38,29 @@ public class CatalogTest {
         @Order(0)
         public void testCatalogHasRobotsCatalogList() {
             try {
-                Field robotsCatalogField = Catalog.class.getDeclaredField("robotsCatalog");
-                assertNotNull(robotsCatalogField, "List of robots does not exist in Catalog class.");
-            } catch (NoSuchFieldException e) {
+                Field[] fields = Catalog.class.getDeclaredFields();
+                Map<String, Integer> fieldModifiersByName = Arrays.stream(fields)
+                    .collect(
+                        Collectors.toMap(
+                            field -> field.getName(),
+                            field -> field.getModifiers()
+                        )
+                    );
+
+                Map<String, String> fieldTypesByName = Arrays.stream(fields)
+                    .collect(
+                        Collectors.toMap(
+                            field -> field.getName(),
+                            field -> field.getType().getSimpleName()
+                        )
+                    );
+
+                assertAll(
+                    () -> assertTrue(fieldModifiersByName.containsKey("robotsCatalog"), "List<Robot> attribute 'robotsCatalog' does not exist in Catalog class."),
+                    () -> assertEquals(Modifier.toString(Modifier.PRIVATE), Modifier.toString(fieldModifiersByName.getOrDefault("robotsCatalog", 0)), "List<Robot> attribute 'robotsCatalog' is not private in Catalog class."),
+                    () -> assertEquals("List", fieldTypesByName.getOrDefault("robotsCatalog", ""), "Attribute 'robotsCatalog' in Catalog class is not of type List<Robot>.")
+                );
+            } catch (Exception e) {
                 fail("List of robots does not exist in Catalog class.");
             }
         }
@@ -293,13 +317,4 @@ public class CatalogTest {
             }
         }
     }
-
-
-
-
-
-
-
-
-
 }
