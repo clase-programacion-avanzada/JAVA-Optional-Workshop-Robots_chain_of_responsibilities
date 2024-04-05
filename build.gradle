@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group = 'com.javeriana'
@@ -17,7 +18,59 @@ dependencies {
 
 }
 
-test {
+task componentTest(type: Test) {
     useJUnitPlatform()
     failFast = true
+    include '**/ComponentTest.*'
+
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+        showExceptions true
+        showCauses true
+        showStackTraces true
+    }
 }
+
+task robotTest(type: Test) {
+    useJUnitPlatform()
+    failFast = true
+    include '**/RobotTest.*'
+    mustRunAfter tasks.named('componentTest')
+
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+        showExceptions true
+        showCauses true
+        showStackTraces true
+    }
+}
+
+task catalogTest(type: Test) {
+    useJUnitPlatform()
+    failFast = true
+    include '**/CatalogTest.*'
+    mustRunAfter tasks.named('robotTest')
+
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+        showExceptions true
+        showCauses true
+        showStackTraces true
+    }
+}
+
+application {
+    mainClassName = 'com.javeriana.Main'
+}
+
+run.dependsOn check
+
+test {
+    useJUnitPlatform()
+
+}
+
+check.dependsOn componentTest, robotTest, catalogTest
