@@ -24,7 +24,7 @@ task componentClassDefinitionTest(type: Test) {
     include '**/ComponentClassDefinitionTest.*'
 
     testLogging {
-        events "passed", "skipped", "failed"
+        events "failed"
         exceptionFormat "full"
         showExceptions true
         showCauses true
@@ -39,7 +39,7 @@ task robotClassDefinitionTest(type: Test) {
     mustRunAfter tasks.named('componentClassDefinitionTest')
 
     testLogging {
-        events "passed", "skipped", "failed"
+        events "failed"
         exceptionFormat "full"
         showExceptions true
         showCauses true
@@ -54,7 +54,7 @@ task robotBehaviorTest(type: Test) {
     mustRunAfter tasks.named('robotClassDefinitionTest')
 
     testLogging {
-        events "passed", "skipped", "failed"
+        events "failed"
         exceptionFormat "full"
         showExceptions true
         showCauses true
@@ -69,7 +69,7 @@ task catalogDefinitionTest(type: Test) {
     mustRunAfter tasks.named('robotBehaviorTest')
 
     testLogging {
-        events "passed", "skipped", "failed"
+        events "failed"
         exceptionFormat "full"
         showExceptions true
         showCauses false
@@ -84,7 +84,7 @@ task catalogBehaviorTest(type: Test) {
     mustRunAfter tasks.named('catalogDefinitionTest')
 
     testLogging {
-        events "passed", "skipped", "failed"
+        events "failed"
         exceptionFormat "full"
         showExceptions true
         showCauses false

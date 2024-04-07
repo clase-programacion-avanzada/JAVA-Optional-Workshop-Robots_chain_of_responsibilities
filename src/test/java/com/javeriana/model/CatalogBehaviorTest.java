@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,7 @@ public class CatalogBehaviorTest {
         }
 
         @Test
+        @DisplayName("Test catalog is creating an empty catalog.")
         @Order(0)
         void testCatalogIsCreatingAnEmptyCatalog() {
             try {
@@ -65,6 +67,7 @@ public class CatalogBehaviorTest {
 
         }
         @Test
+        @DisplayName("Test catalog is adding a robot.")
         @Order(1)
         void testCatalogIsAddingARobot() {
 
@@ -91,6 +94,7 @@ public class CatalogBehaviorTest {
 
 
         @Test
+        @DisplayName("Test catalog is not adding a robot when it already exists.")
         @Order(2)
         void testCatalogIsNotAddingARobotWhenItAlreadyExists() {
 
@@ -114,6 +118,7 @@ public class CatalogBehaviorTest {
         }
 
         @Test
+        @DisplayName("Test catalog is returning a robot when searching robot by code that exists in catalog.")
         @Order(3)
         void testCatalogIsReturningARobotWhenSearchingRobotByCodeThatExistsInCatalog() {
 
@@ -138,6 +143,7 @@ public class CatalogBehaviorTest {
         }
 
         @Test
+        @DisplayName("Test catalog is returning a null when searching robot by code that does not exist in catalog.")
         @Order(4)
         void testCatalogIsReturningANullWhenSearchingRobotByCodeThatNotExistsInCatalog() {
 
@@ -158,16 +164,24 @@ public class CatalogBehaviorTest {
         }
 
         @Test
+        @DisplayName("Test catalog is adding a component to a robot.")
         @Order(5)
         void testCatalogIsAddingAComponentToARobot() {
 
             try {
 
+                // Add a robot
+                Method addRobotMethod = Catalog.class.getMethod("addRobot", String.class, double.class);
+                addRobotMethod.invoke(catalog, CODE, MAX_WEIGHT);
 
                 Method addComponentToRobotMethod = Catalog.class.getMethod("addComponentToRobot", String.class, int.class, String.class, double.class);
                 boolean result = (boolean) addComponentToRobotMethod.invoke(catalog, CODE, COMPONENT_ID, COMPONENT_NAME, COMPONENT_WEIGHT);
 
                 assertTrue(result, "Catalog should add a component to a robot when it does exist.");
+
+                // Component should not be added when component weight exceeds robot max weight
+                boolean resultWhenComponentWeightExceedsMaxWeight = (boolean) addComponentToRobotMethod.invoke(catalog, CODE, 2, "Component2", 1000);
+                assertFalse(resultWhenComponentWeightExceedsMaxWeight, "Catalog should not add a component to a robot when component weight exceeds robot max weight.");
             } catch (NoSuchMethodException e) {
                 fail("Method addComponentToRobot does not exist in Catalog class.");
             } catch (InvocationTargetException e) {
@@ -179,6 +193,7 @@ public class CatalogBehaviorTest {
         }
 
         @Test
+        @DisplayName("Test catalog is not adding a component to a robot when it does not exist.")
         @Order(6)
         void testCatalogIsNotAddingAComponentToARobotWhenItDoesNotExist() {
 
@@ -198,6 +213,7 @@ public class CatalogBehaviorTest {
         }
 
         @Test
+        @DisplayName("Test catalog is removing a robot.")
         @Order(7)
         void testCatalogIsRemovingARobot() {
             try {
@@ -220,6 +236,7 @@ public class CatalogBehaviorTest {
         }
 
         @Test
+        @DisplayName("Test catalog is not removing a robot when it does not exist.")
         @Order(8)
         void testCatalogIsNotRemovingARobotWhenItDoesNotExist() {
             try {
@@ -238,8 +255,9 @@ public class CatalogBehaviorTest {
         }
 
         @Test
+        @DisplayName("Test catalog is getting non-repeated components names used in all robots.")
         @Order(9)
-        void testCatalogIsGettingComponentsNamesUsedInAllRobots() {
+        void testCatalogIsGettingNonRepeatedComponentsNamesUsedInAllRobots() {
             try {
                 // Obtain and invoke addRobot method
                 Method addRobotMethod = Catalog.class.getMethod("addRobot", String.class, double.class);
@@ -252,6 +270,7 @@ public class CatalogBehaviorTest {
                 // Add another robot and component
                 addRobotMethod.invoke(catalog, "Robot2", MAX_WEIGHT);
                 String component2 = "Component2";
+                addComponentToRobotMethod.invoke(catalog, "Robot2", 2, component2, 20);
                 addComponentToRobotMethod.invoke(catalog, "Robot2", 2, component2, 20);
 
                 // Obtain and invoke getComponentsNamesUsedInAllRobots method

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Catalog {
 
-    List<Robot> robotsCatalog;
+    private List<Robot> robotsCatalog;
 
     public Catalog() {
         this.robotsCatalog = new ArrayList<>();
