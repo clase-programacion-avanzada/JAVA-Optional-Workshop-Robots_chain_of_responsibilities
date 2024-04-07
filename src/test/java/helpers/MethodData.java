@@ -15,7 +15,7 @@ public record MethodData(
     }
 
     public MethodData(String name, String returnType, String modifier) {
-        this(name, returnType, modifier, new Class[] {void.class}, "");
+        this(name, returnType, modifier, new Class[0], "");
     }
 
     public MethodData(String name, String returnType) {
@@ -23,7 +23,7 @@ public record MethodData(
     }
 
     public MethodData(String name) {
-        this(name, "void", "", new Class[] {void.class}, "");
+        this(name, "void", "", new Class[0], "");
     }
 
 }

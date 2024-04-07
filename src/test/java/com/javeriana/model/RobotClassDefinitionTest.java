@@ -33,9 +33,9 @@ public class RobotClassDefinitionTest {
 
 
     public static final List<AttributeData> EXPECTED_ATTRIBUTES = Arrays.asList(
-        new AttributeData(CODE_FIELD, PRIVATE_MODIFIER, STRING_TYPE),
-        new AttributeData(MAX_WEIGHT_FIELD, PRIVATE_MODIFIER, DOUBLE_TYPE),
-        new AttributeData(COMPONENTS_FIELD, PRIVATE_MODIFIER, LIST_TYPE)
+        new AttributeData(CODE_FIELD, STRING_TYPE, PRIVATE_MODIFIER),
+        new AttributeData(MAX_WEIGHT_FIELD, DOUBLE_TYPE, PRIVATE_MODIFIER),
+        new AttributeData(COMPONENTS_FIELD, LIST_TYPE, PRIVATE_MODIFIER)
     );
     public ClassDefinitionHelper definitionHelper = new ClassDefinitionHelper(Robot.class);
     @Test
@@ -55,7 +55,7 @@ public class RobotClassDefinitionTest {
     @Order(1)
     public void testRobotHasConstructorWithCodeAndMaxWeight() {
 
-        definitionHelper.testConstructor(int.class, String.class, double.class);
+        definitionHelper.testConstructor(String.class, double.class);
 
     }
 
@@ -65,6 +65,9 @@ public class RobotClassDefinitionTest {
     public void testRobotHasGettersAndSetters() {
 
         definitionHelper.testGetters(EXPECTED_ATTRIBUTES);
+        //Setters will be just for code and maxWeight attributes
+        var setterAttributes = EXPECTED_ATTRIBUTES.subList(0, 2);
+        definitionHelper.testSetters(setterAttributes);
 
 
     }
@@ -84,7 +87,7 @@ public class RobotClassDefinitionTest {
         Class[] parameterTypes = {int.class, String.class, double.class};
         var methodData = new MethodData(
             "addComponent",
-            "void",
+            "boolean",
             definitionHelper.PUBLIC_MODIFIER,
             parameterTypes);
         definitionHelper.testMethodDefinition(methodData);

@@ -7,20 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -28,47 +21,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Order(3)
-public class CatalogTest {
+public class CatalogBehaviorTest {
 
-    @Nested
-    @Order(1)
-    class VerifyClassDefinition {
-        //Verify that Catalog has a list of robots
-        @Test
-        @Order(0)
-        public void testCatalogHasRobotsCatalogList() {
-            try {
-                Field[] fields = Catalog.class.getDeclaredFields();
-                Map<String, Integer> fieldModifiersByName = Arrays.stream(fields)
-                    .collect(
-                        Collectors.toMap(
-                            field -> field.getName(),
-                            field -> field.getModifiers()
-                        )
-                    );
 
-                Map<String, String> fieldTypesByName = Arrays.stream(fields)
-                    .collect(
-                        Collectors.toMap(
-                            field -> field.getName(),
-                            field -> field.getType().getSimpleName()
-                        )
-                    );
-
-                assertAll(
-                    () -> assertTrue(fieldModifiersByName.containsKey("robotsCatalog"), "List<Robot> attribute 'robotsCatalog' does not exist in Catalog class."),
-                    () -> assertEquals(Modifier.toString(Modifier.PRIVATE), Modifier.toString(fieldModifiersByName.getOrDefault("robotsCatalog", 0)), "List<Robot> attribute 'robotsCatalog' is not private in Catalog class."),
-                    () -> assertEquals("List", fieldTypesByName.getOrDefault("robotsCatalog", ""), "Attribute 'robotsCatalog' in Catalog class is not of type List<Robot>.")
-                );
-            } catch (Exception e) {
-                fail("List of robots does not exist in Catalog class.");
-            }
-        }
-    }
-
-    @Nested
-    @Order(1)
-    class VerifyClassBehavior {
         private static final String CODE = "Robot1";
         private static final double MAX_WEIGHT = 100;
 
@@ -96,8 +51,8 @@ public class CatalogTest {
                 List<Robot> robotsCatalog = (List<Robot>) getRobotsCatalogMethod.invoke(catalog);
 
                 assertAll(
-                    () -> assertNotNull(robotsCatalog, "Method getRobotsCatalog does not exist in Catalog class."),
-                    () -> assertEquals(0, robotsCatalog.size())
+                    () -> assertNotNull(robotsCatalog, "Robots catalog should not be null when creating a new Catalog."),
+                    () -> assertEquals(0, robotsCatalog.size(), "Robots catalog should be empty when creating a new Catalog.")
                 );
 
             } catch (NoSuchMethodException e) {
@@ -121,8 +76,8 @@ public class CatalogTest {
                 List<Robot> robotsCatalog = (List<Robot>) getRobotsCatalogMethod.invoke(catalog);
 
                 assertAll(
-                    () -> assertTrue(result),
-                    () -> assertEquals(1, robotsCatalog.size())
+                    () -> assertTrue(result, "Catalog should add a robot when it does not exist."),
+                    () -> assertEquals(1, robotsCatalog.size(), "Robots catalog should have one robot after adding it.")
                 );
             } catch (NoSuchMethodException e) {
                 fail("Method addRobot does not exist in Catalog class.");
@@ -145,8 +100,8 @@ public class CatalogTest {
                 boolean resultWhenRobotAlreadyExists = (boolean) addRobotMethod.invoke(catalog, CODE, MAX_WEIGHT);
 
                 assertAll(
-                    () -> assertTrue(result),
-                    () -> assertFalse(resultWhenRobotAlreadyExists)
+                    () -> assertTrue(result, "Catalog should not add a robot when it exists in list."),
+                    () -> assertFalse(resultWhenRobotAlreadyExists, "Catalog should not add a robot when it already exists in list.")
                 );
             } catch (NoSuchMethodException e) {
                 fail("Method addRobot does not exist in Catalog class.");
@@ -172,7 +127,7 @@ public class CatalogTest {
                 Method getCodeMethod = Robot.class.getMethod("getCode");
                 String code = (String) getCodeMethod.invoke(robot);
 
-                assertEquals(CODE, code);
+                assertEquals(CODE, code, "Catalog should return a robot when it exists in list.");
             } catch (NoSuchMethodException e) {
                 fail("Method does not exist in Catalog class.");
             } catch (InvocationTargetException e) {
@@ -192,7 +147,7 @@ public class CatalogTest {
 
                 Robot robot = (Robot) searchRobotByCodeMethod.invoke(catalog, CODE);
 
-                assertNull(robot);
+                assertNull(robot, "Catalog should return null when searching a robot that does not exist in list.");
             } catch (NoSuchMethodException e) {
                 fail("Method searchRobotByCode does not exist in Catalog class.");
             } catch (InvocationTargetException e) {
@@ -212,7 +167,7 @@ public class CatalogTest {
                 Method addComponentToRobotMethod = Catalog.class.getMethod("addComponentToRobot", String.class, int.class, String.class, double.class);
                 boolean result = (boolean) addComponentToRobotMethod.invoke(catalog, CODE, COMPONENT_ID, COMPONENT_NAME, COMPONENT_WEIGHT);
 
-                assertTrue(result);
+                assertTrue(result, "Catalog should add a component to a robot when it does exist.");
             } catch (NoSuchMethodException e) {
                 fail("Method addComponentToRobot does not exist in Catalog class.");
             } catch (InvocationTargetException e) {
@@ -231,7 +186,7 @@ public class CatalogTest {
                 Method addComponentToRobotMethod = Catalog.class.getMethod("addComponentToRobot", String.class, int.class, String.class, double.class);
                 boolean result = (boolean) addComponentToRobotMethod.invoke(catalog, CODE, COMPONENT_ID, COMPONENT_NAME, COMPONENT_WEIGHT);
 
-                assertFalse(result);
+                assertFalse(result, "Catalog should not add a component to a robot if it does not exist.");
             } catch (NoSuchMethodException e) {
                 fail("Method addComponentToRobot does not exist in Catalog class.");
             } catch (InvocationTargetException e) {
@@ -254,7 +209,7 @@ public class CatalogTest {
                 Method removeRobotMethod = Catalog.class.getMethod("removeRobot", String.class);
                 boolean result = (boolean) removeRobotMethod.invoke(catalog, CODE);
 
-                assertTrue(result);
+                assertTrue(result, "Catalog should remove a robot when it exists in list.");
             } catch (NoSuchMethodException e) {
                 fail("Method does not exist in Catalog class.");
             } catch (InvocationTargetException e) {
@@ -272,7 +227,7 @@ public class CatalogTest {
                 Method removeRobotMethod = Catalog.class.getMethod("removeRobot", String.class);
                 boolean result = (boolean) removeRobotMethod.invoke(catalog, CODE);
 
-                assertFalse(result);
+                assertFalse(result, "Catalog should not remove a robot when it does not exist in list.");
             } catch (NoSuchMethodException e) {
                 fail("Method removeRobot does not exist in Catalog class.");
             } catch (InvocationTargetException e) {
@@ -305,8 +260,8 @@ public class CatalogTest {
 
                 List<String> expectedComponentsNames = List.of(COMPONENT_NAME, component2);
                 assertAll(
-                    () -> assertEquals(2, componentsNames.size()),
-                    () -> assertEquals(expectedComponentsNames, componentsNames)
+                    () -> assertEquals(2, componentsNames.size(), "Catalog should return the correct number of components names."),
+                    () -> assertEquals(expectedComponentsNames, componentsNames, "Catalog should return the correct components names.")
                 );
             } catch (NoSuchMethodException e) {
                 fail("Method does not exist in Catalog class.");
@@ -316,5 +271,4 @@ public class CatalogTest {
                 fail("Method is not accessible. Check its access modifier.");
             }
         }
-    }
 }

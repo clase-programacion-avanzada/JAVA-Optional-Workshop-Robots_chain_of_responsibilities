@@ -75,6 +75,10 @@ public class ClassDefinitionHelper {
         }
     }
 
+    private String getGetterName(String attributeName) {
+        return GET + attributeName.substring(0, 1).toUpperCase() + attributeName.substring(1);
+    }
+
     public void testGetters(List<AttributeData> expectedAttributes) {
 
         var getters = getters();
@@ -82,11 +86,15 @@ public class ClassDefinitionHelper {
         assertAll(
             expectedAttributes.stream()
                 .flatMap(attribute -> Stream.of(
-                 () -> assertTrue(getters.containsKey(GET + attribute.name()), GET + attribute.name() + " method does not exist in " + testClass.getSimpleName() + " class."),
-                 () -> assertEquals(PUBLIC_MODIFIER, Modifier.toString(getters.getOrDefault(GET + attribute.name(), DEFAULT_ENTRY).getKey()), GET + attribute.name() + " method is not public in " + testClass.getSimpleName() + " class."),
-                 () -> assertEquals(attribute.type(), getters.getOrDefault(GET + attribute.name(), DEFAULT_ENTRY).getValue(), GET + attribute.name() + " method in " + testClass.getSimpleName() + " class is not of type " + attribute.type() + ".")))
+                 () -> assertTrue(getters.containsKey(getGetterName(attribute.name())), getGetterName(attribute.name()) + " method does not exist in " + testClass.getSimpleName() + " class."),
+                 () -> assertEquals(PUBLIC_MODIFIER, Modifier.toString(getters.getOrDefault(getGetterName(attribute.name()), DEFAULT_ENTRY).getKey()), getGetterName(attribute.name()) + " method is not public in " + testClass.getSimpleName() + " class."),
+                 () -> assertEquals(attribute.type(), getters.getOrDefault(getGetterName(attribute.name()), DEFAULT_ENTRY).getValue(), getGetterName(attribute.name()) + " method in " + testClass.getSimpleName() + " class is not of type " + attribute.type() + ".")))
 
         );
+    }
+
+    private String getSetterName(String attributeName) {
+        return SET + attributeName.substring(0, 1).toUpperCase() + attributeName.substring(1);
     }
 
     public void testSetters(List<AttributeData> expectedAttributes) {
@@ -96,11 +104,21 @@ public class ClassDefinitionHelper {
         assertAll(
             expectedAttributes.stream()
                 .flatMap(attribute -> Stream.of(
-                 () -> assertTrue(setters.containsKey(SET + attribute.name()), SET + attribute.name() + " method does not exist in " + testClass.getSimpleName() + " class."),
-                 () -> assertEquals(PUBLIC_MODIFIER, Modifier.toString(setters.getOrDefault(SET + attribute.name(), DEFAULT_ENTRY).getKey()), SET + attribute.name() + " method is not public in " + testClass.getSimpleName() + " class."),
-                 () -> assertEquals("void", setters.getOrDefault(SET + attribute.name(), DEFAULT_ENTRY).getValue(), SET + attribute.name() + " method in " + testClass.getSimpleName() + " class is not void.")))
+                 () -> assertTrue(setters.containsKey(getSetterName(attribute.name())), getSetterName(attribute.name()) + " method does not exist in " + testClass.getSimpleName() + " class."),
+                 () -> assertEquals(PUBLIC_MODIFIER, Modifier.toString(setters.getOrDefault(getSetterName(attribute.name()), DEFAULT_ENTRY).getKey()), getSetterName(attribute.name()) + " method is not public in " + testClass.getSimpleName() + " class."),
+                 () -> assertEquals("void", setters.getOrDefault(getSetterName(attribute.name()), DEFAULT_ENTRY).getValue(), getSetterName(attribute.name()) + " method in " + testClass.getSimpleName() + " class is not void.")))
 
         );
+
+        if (setters.size() > expectedAttributes.size()) {
+            List<String> extraSetters = setters.keySet().stream()
+                .filter(setter -> !expectedAttributes.stream()
+                    .map(attribute -> getSetterName(attribute.name()))
+                    .anyMatch(attribute -> attribute.equals(setter)))
+                .toList();
+            throw new AssertionError(
+                "Extra setters found in " + testClass.getSimpleName() + " class: " + extraSetters);
+        }
     }
 
     public void testAttributes(List<AttributeData> expectedAttributes) {

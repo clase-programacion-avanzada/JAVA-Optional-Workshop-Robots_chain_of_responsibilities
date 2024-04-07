@@ -104,7 +104,7 @@ public class RobotBehaviorTest {
             addComponentMethod.invoke(robot, 2, "Component2", 20.0);
             addComponentMethod.invoke(robot, 3, "Component3", 30.0);
 
-            int totalWeight = (int) getComponentsWeightMethod.invoke(robot);
+            double totalWeight = (double) getComponentsWeightMethod.invoke(robot);
 
             assertEquals(60, totalWeight,
                 "Robot is not getting the correct total weight of its components.");

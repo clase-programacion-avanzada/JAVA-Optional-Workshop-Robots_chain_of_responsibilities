@@ -62,11 +62,26 @@ task robotBehaviorTest(type: Test) {
     }
 }
 
-task catalogTest(type: Test) {
+task catalogDefinitionTest(type: Test) {
     useJUnitPlatform()
     failFast = true
-    include '**/CatalogTest.*'
+    include '**/CatalogDefinitionTest.*'
     mustRunAfter tasks.named('robotBehaviorTest')
+
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+        showExceptions true
+        showCauses false
+        showStackTraces false
+    }
+}
+
+task catalogBehaviorTest(type: Test) {
+    useJUnitPlatform()
+    failFast = true
+    include '**/CatalogBehaviorTest.*'
+    mustRunAfter tasks.named('catalogDefinitionTest')
 
     testLogging {
         events "passed", "skipped", "failed"
@@ -88,4 +103,4 @@ test {
 
 }
 
-check.dependsOn componentClassDefinitionTest, robotClassDefinitionTest, robotBehaviorTest, catalogTest
+check.dependsOn componentClassDefinitionTest, robotClassDefinitionTest, robotBehaviorTest, catalogDefinitionTest, catalogBehaviorTest
