@@ -20,13 +20,14 @@ Para configurar el proyecto en intellij y poder ejecutar las pruebas, siga los s
 
 ### Opción Usando la consola:
 
-En el caso de querer usar la consola, ejecute el siguiente comando en la raíz del proyecto:
+
+En el caso de querer usar la consola, ejecute el siguiente comando en la raíz del proyecto 
+(Recuerde que la consola se encuentra en la parte inferior de intellij):
 
 ```bash
 ./gradlew build
 ```
 ![Instrucciones_8.png](assets%2FInstrucciones_8.png)
-recuerde que la consola se encuentra en la parte inferior izquierda de intellij.
 
 ## Ejecución de las pruebas
 Sea cual sea la opción que haya elegido, puede ejecutar las pruebas del proyecto haciendo click en el botón de play de intellij o con el comando de la consola.
