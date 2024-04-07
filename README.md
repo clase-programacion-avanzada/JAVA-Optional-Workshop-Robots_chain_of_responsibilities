@@ -1,7 +1,41 @@
 # Taller 9 - Diagramas de Clases y Cadena de Responsabilidad
 
 ## Pre-requisitos
+Para poder realizar este taller se deben poder ejecutar las pruebas configuradas que van a validar la implementación de los métodos de las clases. Para esto, se debe tener instalado el JDK 11 y maven en su máquina. Para verificar que tiene instalado maven, ejecute el siguiente comando en la consola:
 
+### Opción Usando intellij directamente:
+Para configurar el proyecto en intellij y poder ejecutar las pruebas, siga los siguientes pasos:
+1. Clone el repositorio del curso en su máquina.
+2. Abra el proyecto en intellij.
+3. Junto al botón de play debería aparecer un menú desplegable ahí encontrará la opción _Editar configuraciones_ o _Edit Configurations, haga click en este menú.
+![Instrucciones_1.png](assets%2FInstrucciones_1.png)
+4. Esto abrirá una ventana emergente, haga click en el botón de + y seleccione la opción _Gradle_.
+![Instrucciones_2.png](assets%2FInstrucciones_2.png)
+![Instrucciones_3.png](assets%2FInstrucciones_3.png)
+5. En la configuración que se crea, en el campo _Tasks_ escriba o seleccione _build_ y haga click en _Apply_ y luego en _Ok_.
+![Instrucciones_4.png](assets%2FInstrucciones_4.png)
+![Instrucciones_5.png](assets%2FInstrucciones_5.png)
+![Instrucciones_6.png](assets%2FInstrucciones_6.png)
+![Instrucciones_7.png](assets%2FInstrucciones_7.png)
+
+### Opción Usando la consola:
+
+En el caso de querer usar la consola, ejecute el siguiente comando en la raíz del proyecto:
+
+```bash
+./gradlew build
+```
+![Instrucciones_8.png](assets%2FInstrucciones_8.png)
+recuerde que la consola se encuentra en la parte inferior izquierda de intellij.
+
+## Ejecución de las pruebas
+Sea cual sea la opción que haya elegido, puede ejecutar las pruebas del proyecto haciendo click en el botón de play de intellij o con el comando de la consola.
+Al hacerlo, se encontrará con una pantalla similar a la siguiente:
+![Instrucciones_9.png](assets/Instrucciones_9.png)
+
+Fíjese que todas las pruebas fallan. Esto es porque aún no se ha implementado ninguna de las funcionalidades que implementará en el taller.
+Además, en el recuadro rojo puede observar que las pruebas al fallar le indican qué es lo que se espera que tenga su implementación.
+A medida que vaya implementando las funcionalidades, las pruebas fallidas irán desapareciendo, hasta que el código esté completo y todas las pruebas pasen.
 
 
 ## Catalogo de robots
