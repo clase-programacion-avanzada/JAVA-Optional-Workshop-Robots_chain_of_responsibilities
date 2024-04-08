@@ -66,8 +66,9 @@ Implemente las siguientes funcionalidades en la clase _[Robot](./src/main/java/c
 1. getters para todos los atributos y setters para todos los atributos excepto para la lista de componentes.
 2. Un constructor por parámetros que reciba el atributo _code_ y _maxWeight_. Este constructor debe dejar la lista de componentes inicializada pero vacía
 3. Un método llamado _addComponent_ que reciba como parámetros los atributos de un componente y lo agregue a la lista de componentes del robot.
-Este método debe retornar un _booleano_ que indique si el componente fue agregado o no. **Un componente no puede ser agregado si el peso total de los componentes del robot supera el peso máximo del robot.**
+Este método debe retornar un _boolean_ que indique si el componente fue agregado o no. **Un componente no puede ser agregado si el peso total de los componentes del robot supera el peso máximo del robot.**
 4. Un método llamado _getComponentsWeight_ que retorne el peso total de los componentes del robot.
+5. Un método llamado _getComponentsNames_ que retorne los nombres de todos los componentes del robot **sin repetición**
 
 ### Catalog
 Implemente las siguientes funcionalidades en la clase _[Catalog](./src/main/java/com/javeriana/model/Catalog.java)_:
