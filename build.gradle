@@ -65,7 +65,7 @@ task robotBehaviorTest(type: Test) {
 task catalogDefinitionTest(type: Test) {
     useJUnitPlatform()
     failFast = true
-    include '**/CatalogDefinitionTest.*'
+    include '**/CatalogClassDefinitionTest.*'
     mustRunAfter tasks.named('robotBehaviorTest')
 
     testLogging {
