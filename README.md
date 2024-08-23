@@ -1,4 +1,4 @@
-# Taller 9 - Diagramas de Clases y Cadena de Responsabilidad
+# Taller Opcional - Diagramas de Clases y Cadena de Responsabilidad
 
 ## Pre-requisitos
 Para poder realizar este taller se deben poder ejecutar las pruebas configuradas que van a validar la implementación de los métodos de las clases. Hay dos opciones que puede usar:
